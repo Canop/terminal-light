@@ -1,6 +1,6 @@
 [package]
 name = "terminal-light"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2018"
 authors = ["dystroy <denys.seguret@gmail.com>"]
 repository = "https://github.com/Canop/terminal-light"
@@ -12,5 +12,6 @@ readme = "README.md"
 
 [dependencies]
 crossterm = "0.20"
+nix = "0.22"
 thiserror = "1.0"
 
