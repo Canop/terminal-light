@@ -111,12 +111,12 @@ fn query_xterm(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<usi
         Some(& mut event),
     )?;
     let mut events = [EpollEvent::empty(); 1];
-    let n = epoll_wait(poll_fd, &mut events, timeout_ms)?;
-    if n == 0 {
-        Err(TlError::Timeout)
+    let fd_count = epoll_wait(poll_fd, &mut events, timeout_ms)?;
+    if fd_count == 0 {
+        Err(TlError::Timeout) // no file descriptor was ready in time
     } else {
-        let n = stdin.read(&mut response[..])?;
-        Ok(n)
+        let bytes_written = stdin.read(response)?;
+        Ok(bytes_written)
     }
 }
 
