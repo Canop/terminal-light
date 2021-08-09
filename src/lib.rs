@@ -107,7 +107,7 @@ fn query_xterm(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<usi
     epoll_ctl(
         poll_fd,
         EpollOp::EpollCtlAdd,
-        0, // STDIN_FILENO
+        nix::libc::STDIN_FILENO,
         Some(& mut event),
     )?;
     let mut events = [EpollEvent::empty(); 1];
