@@ -1,5 +1,5 @@
 /*!
-This crate answers the question *"Is the terminal dark or light?"*, whenever possible.
+This crate answers the question *"Is the terminal dark or light?"*.
 
 It provides either
 
