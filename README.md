@@ -59,7 +59,7 @@ Bonus:
 
 Malus:
 
-* this env variable isn't usually immediately updated when you change the color of the terminal, a new shell session might be needed to get the up to date value
+* this env variable isn't always immediately updated when you change the color of the terminal
 * the value isn't precise: `0` is "dark" and `15` is "light" but the real RGB color is uncertain as the low ANSI codes are often modified by the user
 
 ## "Dynamic colors" OSC escape sequence strategy
