@@ -96,14 +96,11 @@ pub use {
 /// ```
 pub fn background_color() -> Result<Color, TlError> {
     let xterm_color = xterm::query_bg_color();
-    dbg!(&xterm_color);
     if let Ok(xterm_color) = xterm_color {
         return Ok(Color::Rgb(xterm_color));
     }
     let env_color = env::bg_color();
-    dbg!(&env_color);
     if let Ok(env_color) = env_color {
-        dbg!(env_color.to_rgb());
         return Ok(Color::Ansi(env_color));
     }
     Err(TlError::Unsupported)
