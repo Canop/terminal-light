@@ -18,7 +18,7 @@ This crate answers the question *"Is the terminal dark or light?"*.
 
 It provides
 
-* the background color
+* the background color, either as RGB or ANSI
 * the background color's luma, which varies from 0 (black) to 1 (white)
 
 A use case in a TUI is to determine what set of colors would be most suitable depending on the terminal's background:
@@ -71,13 +71,15 @@ Terminal-light sends the query to `stdout`, waits for the answer on `stdin` with
 Bonus:
 
 * this works well on all tested linux terminals
-* the value is precise and up to date when it's available
+* the value is precise (RGB)
+* the value is up to date when it's available
 
 Malus:
 
 * waiting for stdin with a timeout isn't implemented on Windows in this crate (help welcome)
 * this isn't instant, a delay of 10 ms to get the answer isn't unusual
 * if a not compatible terminal doesn't answer at all, we're waiting for 20ms
+* it may fail on some terminal multiplexers
 
 ## Global strategy used by Terminal-light
 
