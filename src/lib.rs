@@ -1,34 +1,80 @@
 /*!
+
 This crate answers the question *"Is the terminal dark or light?"*.
 
 It provides
 
-* the background color as RGB
+* the background color
 * the background color's luma, which varies from 0 (black) to 1 (white)
 
 A use case in a TUI is to determine what set of colors would be most suitable depending on the terminal's background:
+
 ```
 let should_use_light_skin = terminal_light::luma()
     .map_or(false, |luma| luma > 0.6);
 ```
 
-The behavior and result of the [bg_color] and [luma] functions depend:
+If you have very specialized skins, you may choose a more precise switch:
 
-On non unix-like platforms, you'll receive a [TlError::Unsupported] error (help welcome to improve this).
+```
+match terminal_light::luma() {
+    Ok(luma) if luma > 0.85 => {
+        // Use a "dark mode" skin.
+    }
+    Ok(luma) if luma < 0.2 => {
+        // Use a "light mode" skin.
+    }
+    _ => {
+        // Either we couldn't determine the mode or it's kind of medium.
+        // We should use an itermediate skin, or one defining the background.
+    }
+}
+```
 
-On unix-like (linux, Darwin, etc.), a terminal sequence is sent to stdout and the response is read (with timeout) on stdin.
+# Strategies
 
-If the terminal is somehow modern, the answer is received and analyzed to give you the color.
+## `$COLORFGBG` strategy
 
-If the terminal doesn't answer fast enough, a [TlError::Timeout] error is returned (current timeout is 20ms).
+This environment variable is set by some terminals, like konsole or the rxvt family.
+It can also be set by users.
+Its value is like `15;0` where the second number is the ANSI code for the background color.
 
-If the terminal's answer isn't understood, an other type of error is returned.
+Bonus:
 
+* querying an env variable is a fast operation
+
+Malus:
+
+* this env variable isn't usually immediately updated when you change the color of the terminal, a new shell session might be needed to get the up to date value
+* the value isn't precise: `0` is "dark" and `15` is "light" but the real RGB color is uncertain as the low ANSI codes are often modified by the user
+
+## "Dynamic colors" OSC escape sequence strategy
+
+Modern terminals implement this xterm extension: a query making it possible to know the background color as RGB.
+
+Terminal-light sends the query to `stdout`, waits for the answer on `stdin` with a timeout of 20ms, then analyses this answer.
+
+Bonus:
+
+* this works well on all tested linux terminals
+* the value is precise and up to date when it's available
+
+Malus:
+
+* waiting for stdin with a timeout isn't implemented on Windows in this crate (help welcome)
+* this isn't instant, a delay of 10 ms to get the answer isn't unusual
+* if a not compatible terminal doesn't answer at all, we're waiting for 20ms
+
+## Global strategy used by Terminal-light
+
+1. if we're on a unix-like platform, we try the escape sequence strategy
+2. if it failed or we're not on unix, we try the `$COLORFGBG` strategy
+3. without a solution, we return a `TlError::Unsupported` error
 */
 
 mod ansi_to_rgb;
 mod color;
-mod env;
+pub mod env;
 mod error;
 mod xterm;
 
@@ -45,19 +91,20 @@ pub use {
 /// If you want it as RGB:
 ///
 /// ```
-/// let backround_color_rgb = terminal_ligh::background_color()
+/// let backround_color_rgb = terminal_light::background_color()
 ///     .map(|c| c.rgb()); // may be an error
 /// ```
 pub fn background_color() -> Result<Color, TlError> {
-    let env_color = env::bg_color();
-    dbg!(&env_color);
-    if let Ok(env_color) = env_color {
-        return Ok(Color::Ansi(env_color));
-    }
     let xterm_color = xterm::query_bg_color();
     dbg!(&xterm_color);
     if let Ok(xterm_color) = xterm_color {
         return Ok(Color::Rgb(xterm_color));
+    }
+    let env_color = env::bg_color();
+    dbg!(&env_color);
+    if let Ok(env_color) = env_color {
+        dbg!(env_color.to_rgb());
+        return Ok(Color::Ansi(env_color));
     }
     Err(TlError::Unsupported)
 }

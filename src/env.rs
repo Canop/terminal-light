@@ -2,7 +2,7 @@ use crate::*;
 
 /// query the $COLORFGBG env variable and parse
 /// the result to extract the background in ANSI.
-pub(crate) fn bg_color() -> Result<AnsiColor, TlError> {
+pub fn bg_color() -> Result<AnsiColor, TlError> {
     let s = std::env::var("COLORFGBG")?;
     // the value is supposed to be like 17;45 where
     // 17 is the ansi fg and 45 is the ansi bg

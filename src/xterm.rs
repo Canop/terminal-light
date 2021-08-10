@@ -47,7 +47,7 @@ fn query(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<usize, Tl
 
 /// Query the bg color, assuming the terminal is in raw mode,
 /// using the "dynamic colors" OSC escape sequence.
-pub(crate) fn query_bg_color() -> Result<Rgb, TlError> {
+pub fn query_bg_color() -> Result<Rgb, TlError> {
     // we use the "dynamic colors" OSC escape sequence. It's sent with a ? for
     // a query and normally answered by the terminal with a color.
     // Reference: https://stackoverflow.com/a/28334701/263525
