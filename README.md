@@ -33,10 +33,10 @@ If you have very specialized skins, you may choose a more precise switch:
 ```
 match terminal_light::luma() {
     Ok(luma) if luma > 0.85 => {
-        // Use a "dark mode" skin.
+        // Use a "light mode" skin.
     }
     Ok(luma) if luma < 0.2 => {
-        // Use a "light mode" skin.
+        // Use a "dark mode" skin.
     }
     _ => {
         // Either we couldn't determine the mode or it's kind of medium.
