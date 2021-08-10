@@ -29,13 +29,13 @@ let should_use_light_skin = terminal_light::luma()
 
 The behavior and result of the `bg_color` and `luma` functions depend:
 
-On non unix-like platforms, you'll receive a `TlError::Unsupported` error (help welcome to improve this).
+On non unix-like platforms, you'll receive a `TlError::Unsupported` error (I'd welcome help from Windows dev to improve this).
 
-On unix-like (linux, Darwin, etc.), a terminal sequence is sent to stdout and the response is read (with timeout) on stdin.
+On unix-like (linux, Darwin, etc.), a terminal sequence is sent to stdout and the response is read on stdin with a timeout of 20 ms.
 
 If the terminal is somehow modern, the answer is received and analyzed to give you the color.
 
-If the terminal doesn't answer fast enough, a `TlError::Timeout` error is returned (current timeout is 20ms).
+If the terminal doesn't answer fast enough, a `TlError::Timeout` error is returned.
 
 If the terminal's answer isn't understood, an other type of error is returned.
 
