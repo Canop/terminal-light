@@ -66,7 +66,7 @@ Malus:
 
 Modern terminals implement this xterm extension: a query making it possible to know the background color as RGB.
 
-Terminal-light sends the query to `stdout`, waits for the answer on `stdin` with a timeout of 20ms, then analyses this answer.
+Terminal-light sends the query on `stdout`, waits for the answer on `stdin` with a timeout of 20ms, then parses this answer.
 
 Bonus:
 

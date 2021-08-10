@@ -1,11 +1,9 @@
 use {
     crate::*,
-    nix::sys::epoll::*,
-    std::io::{self, Read, Write},
 };
 
 #[cfg(not(unix))]
-fn query(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<usize, TlError> {
+fn query(_query: &str, _response: &mut[u8], _timeout_ms: isize) -> Result<usize, TlError> {
     Err(TlError::Unsupported)
 }
 
@@ -13,6 +11,8 @@ fn query(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<usize, Tl
 /// (or we would block waiting for a newline)
 #[cfg(unix)]
 fn query_in_raw(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<usize, TlError> {
+    use nix::sys::epoll::*;
+    use std::io::{self, Read, Write};
     let stdin = io::stdin();
     let mut stdin = stdin.lock();
     let stdout = io::stdout();
@@ -20,6 +20,7 @@ fn query_in_raw(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<us
     write!(stdout, "{}", query)?;
     stdout.flush()?;
     let poll_fd = epoll_create1(EpollCreateFlags::empty())?;
+        //.map_err(|e| TlError::NixError(e as i32))?;
     let mut event = EpollEvent::new(EpollFlags::EPOLLIN, 0);
     epoll_ctl(
         poll_fd,
