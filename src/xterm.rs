@@ -40,9 +40,15 @@ fn query_in_raw(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<us
 
 #[cfg(unix)]
 fn query(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<usize, TlError> {
-    crossterm::terminal::enable_raw_mode()?;
+    use crossterm::terminal::*;
+    let switch_to_raw = !is_raw_mode_enabled()?;
+    if switch_to_raw {
+        enable_raw_mode()?;
+    }
     let res = query_in_raw(query, response, timeout_ms);
-    crossterm::terminal::disable_raw_mode()?;
+    if switch_to_raw {
+        disable_raw_mode()?;
+    }
     res
 }
 
