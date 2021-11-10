@@ -45,7 +45,16 @@ match terminal_light::luma() {
 }
 ```
 
+See the included example:
+
+![dark](doc/dark.png)
+
+![light](doc/light.png)
+
+
 # Strategies
+
+Here are the various strategies automatically used by terminal-light to answer the big question:
 
 ## `$COLORFGBG` strategy
 

@@ -20,7 +20,6 @@ fn query_in_raw(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<us
     write!(stdout, "{}", query)?;
     stdout.flush()?;
     let poll_fd = epoll_create1(EpollCreateFlags::empty())?;
-        //.map_err(|e| TlError::NixError(e as i32))?;
     let mut event = EpollEvent::new(EpollFlags::EPOLLIN, 0);
     epoll_ctl(
         poll_fd,
@@ -57,16 +56,21 @@ fn query(query: &str, response: &mut[u8], timeout_ms: isize) -> Result<usize, Tl
 pub fn query_bg_color() -> Result<Rgb, TlError> {
     // we use the "dynamic colors" OSC escape sequence. It's sent with a ? for
     // a query and normally answered by the terminal with a color.
-    // Reference: https://stackoverflow.com/a/28334701/263525
+    // References:
+    // - https://stackoverflow.com/a/28334701/263525
+    // - https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
     let mut buffer = [0;50];
     let n = query( "\x1b]11;?\x07", &mut buffer, 20)?;
     let s = std::str::from_utf8(&buffer[..n])?;
+    // the string we receive is quite strange.
+    // For example, supposing the background is in #38A4C9 (blue),
+    // then we receive "\u{1b}]11;rgb:3838/a4a4/c9c9\u{1b}\\"
     match s.strip_prefix("\x1b]11;rgb:") {
         Some(raw_color) if raw_color.len() >= 14 => {
             Ok(Rgb::new(
-                u16::from_str_radix(&raw_color[0..4], 16)?,
-                u16::from_str_radix(&raw_color[5..9], 16)?,
-                u16::from_str_radix(&raw_color[10..14], 16)?,
+                u8::from_str_radix(&raw_color[2..4], 16)?,
+                u8::from_str_radix(&raw_color[7..9], 16)?,
+                u8::from_str_radix(&raw_color[12..14], 16)?,
             ))
         }
         _ => Err(TlError::WrongFormat(s.to_string()))

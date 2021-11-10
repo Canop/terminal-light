@@ -75,14 +75,12 @@ Malus:
 
 */
 
-mod ansi_to_rgb;
-mod color;
-pub mod env;
 mod error;
+pub mod env;
 mod xterm;
 
 pub use {
-    color::*,
+    coolor::*,
     error::*,
 };
 
