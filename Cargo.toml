@@ -1,6 +1,6 @@
 [package]
 name = "terminal-light"
-version = "0.6.1"
+version = "0.7.0"
 edition = "2021"
 authors = ["dystroy <denys.seguret@gmail.com>"]
 repository = "https://github.com/Canop/terminal-light"
@@ -13,10 +13,10 @@ readme = "README.md"
 [dependencies]
 coolor = "0.2"
 thiserror = "1.0"
+xterm-query = "0.1"
 
 [target.'cfg(unix)'.dependencies]
 crossterm = "0.21"
-nix = "0.22"
 
 [dev-dependencies]
 crossterm = "0.21"
