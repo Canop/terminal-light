@@ -25,7 +25,7 @@ pub fn query_bg_color() -> Result<Rgb, TlError> {
     // References:
     // - https://stackoverflow.com/a/28334701/263525
     // - https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
-    let s = query( "\x1b]11;?\x07", 20)?;
+    let s = query( "\x1b]11;?\x07", 100)?;
     // the string we receive is quite strange.
     // For example, supposing the background is in #38A4C9 (blue),
     // then we receive "\u{1b}]11;rgb:3838/a4a4/c9c9\u{1b}\\"
