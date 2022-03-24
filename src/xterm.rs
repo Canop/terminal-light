@@ -2,7 +2,6 @@ use {
     crate::*,
 };
 
-#[cfg(unix)]
 fn query(query: &str, timeout_ms: isize) -> Result<String, TlError> {
     use crossterm::terminal::*;
     let switch_to_raw = !is_raw_mode_enabled()?;

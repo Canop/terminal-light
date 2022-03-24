@@ -77,6 +77,8 @@ Malus:
 
 mod error;
 pub mod env;
+
+#[cfg(unix)]
 mod xterm;
 
 pub use {
@@ -96,9 +98,12 @@ pub use {
 ///     .map(|c| c.rgb()); // may be an error
 /// ```
 pub fn background_color() -> Result<Color, TlError> {
-    let xterm_color = xterm::query_bg_color();
-    if let Ok(xterm_color) = xterm_color {
-        return Ok(Color::Rgb(xterm_color));
+    #[cfg(unix)]
+    {
+        let xterm_color = xterm::query_bg_color();
+        if let Ok(xterm_color) = xterm_color {
+            return Ok(Color::Rgb(xterm_color));
+        }
     }
     let env_color = env::bg_color();
     if let Ok(env_color) = env_color {
