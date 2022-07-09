@@ -16,7 +16,7 @@ crossterm = "0.23.1"
 thiserror = "1.0"
 
 [target.'cfg(unix)'.dependencies]
-xterm-query = "0.1"
+xterm-query = { version = "0.1", git = "https://github.com/Canop/xterm-query", branch = "mio" }
 
 [dev-dependencies]
 crossterm = "0.23.1"

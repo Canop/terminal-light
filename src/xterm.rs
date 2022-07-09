@@ -2,7 +2,7 @@ use {
     crate::*,
 };
 
-fn query(query: &str, timeout_ms: isize) -> Result<String, TlError> {
+fn query(query: &str, timeout_ms: u16) -> Result<String, TlError> {
     use crossterm::terminal::*;
     let switch_to_raw = !is_raw_mode_enabled()?;
     if switch_to_raw {
