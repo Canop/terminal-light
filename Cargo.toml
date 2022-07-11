@@ -1,6 +1,6 @@
 [package]
 name = "terminal-light"
-version = "0.8.1"
+version = "1.0.0"
 edition = "2021"
 authors = ["dystroy <denys.seguret@gmail.com>"]
 repository = "https://github.com/Canop/terminal-light"
@@ -16,7 +16,7 @@ crossterm = "0.23.1"
 thiserror = "1.0"
 
 [target.'cfg(unix)'.dependencies]
-xterm-query = { version = "0.1", git = "https://github.com/Canop/xterm-query", branch = "mio" }
+xterm-query = "0.2"
 
 [dev-dependencies]
 crossterm = "0.23.1"
