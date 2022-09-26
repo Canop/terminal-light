@@ -31,9 +31,9 @@ pub fn query_bg_color() -> Result<Rgb, TlError> {
     match s.strip_prefix("\x1b]11;rgb:") {
         Some(raw_color) if raw_color.len() >= 14 => {
             Ok(Rgb::new(
-                u8::from_str_radix(&raw_color[2..4], 16)?,
-                u8::from_str_radix(&raw_color[7..9], 16)?,
-                u8::from_str_radix(&raw_color[12..14], 16)?,
+                u8::from_str_radix(&raw_color[0..2], 16)?,
+                u8::from_str_radix(&raw_color[5..7], 16)?,
+                u8::from_str_radix(&raw_color[10..12], 16)?,
             ))
         }
         _ => Err(TlError::WrongFormat(s.to_string()))
