@@ -25,9 +25,14 @@ pub fn query_bg_color() -> Result<Rgb, TlError> {
     // - https://stackoverflow.com/a/28334701/263525
     // - https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
     let s = query( "\x1b]11;?\x07", 100)?;
-    // the string we receive is quite strange.
+    // The string we receive is like `"\u{1b}]11;rgb:<red>/<green>/<blue>\u{1b}\\"`
+    // where `<red>`, `<green>`, and `<blue>` are 4 hex digits.
+    // Most terminals don't support such precision so they fill the 4 digits
+    // by repeating their 2 digits precision.
     // For example, supposing the background is in #38A4C9 (blue),
-    // then we receive "\u{1b}]11;rgb:3838/a4a4/c9c9\u{1b}\\"
+    // then we receive `"\u{1b}]11;rgb:3838/a4a4/c9c9\u{1b}\\"`.
+    // We read only the most significant hex digits which are good enough
+    // in all cases.
     match s.strip_prefix("\x1b]11;rgb:") {
         Some(raw_color) if raw_color.len() >= 14 => {
             Ok(Rgb::new(

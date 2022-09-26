@@ -2,6 +2,7 @@ use crate::*;
 
 /// query the $COLORFGBG env variable and parse
 /// the result to extract the background in ANSI.
+#[allow(clippy::iter_skip_next)]
 pub fn bg_color() -> Result<AnsiColor, TlError> {
     let s = std::env::var("COLORFGBG")?;
     // the value is supposed to be like 17;45 where
