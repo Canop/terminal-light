@@ -1,6 +1,4 @@
-use {
-    crate::*,
-};
+use crate::*;
 
 fn query(query: &str, timeout_ms: u16) -> Result<String, TlError> {
     use crossterm::terminal::*;
@@ -24,7 +22,7 @@ pub fn query_bg_color() -> Result<Rgb, TlError> {
     // References:
     // - https://stackoverflow.com/a/28334701/263525
     // - https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
-    let s = query( "\x1b]11;?\x07", 100)?;
+    let s = query("\x1b]11;?\x07", 100)?;
     // The string we receive is like `"\u{1b}]11;rgb:<red>/<green>/<blue>\u{1b}\\"`
     // where `<red>`, `<green>`, and `<blue>` are 4 hex digits.
     // Most terminals don't support such precision so they fill the 4 digits

@@ -106,6 +106,7 @@ pub fn background_color() -> Result<Color, TlError> {
         }
     }
     let env_color = env::bg_color();
+    dbg!(&env_color);
     if let Ok(env_color) = env_color {
         return Ok(Color::Ansi(env_color));
     }

@@ -1,4 +1,3 @@
-
 /// terminal-light error type
 #[derive(thiserror::Error, Debug)]
 pub enum TlError {
@@ -25,5 +24,4 @@ pub enum TlError {
     #[error("Unsupported platform")] // nothing works
     Unsupported,
 }
-
 
