@@ -11,7 +11,7 @@ categories = ["command-line-interface"]
 readme = "README.md"
 
 [dependencies]
-coolor = "0.8"
+coolor = "0.9"
 crossterm = "0.27"
 thiserror = "1.0"
 
