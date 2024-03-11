@@ -4,8 +4,7 @@ use crate::*;
 /// the result to extract the background in ANSI.
 #[allow(clippy::iter_skip_next)]
 pub fn bg_color() -> Result<AnsiColor, TlError> {
-    let s = std::env::var("COLORFGBG")
-        .map_err(|_| TlError::NoColorFgBgEnv)?;
+    let s = std::env::var("COLORFGBG").map_err(|_| TlError::NoColorFgBgEnv)?;
     parse_colorfgbg(&s)
 }
 
@@ -32,6 +31,12 @@ fn parse_colorfgbg(s: &str) -> Result<AnsiColor, TlError> {
 fn test_parse_color_fgbg() {
     assert_eq!(parse_colorfgbg("17;45").unwrap(), AnsiColor::new(45));
     assert_eq!(parse_colorfgbg("0;default;15").unwrap(), AnsiColor::new(15));
-    assert!(matches!(parse_colorfgbg("15").unwrap_err(), TlError::WrongFormat(_)));
-    assert!(matches!(parse_colorfgbg("15;FF").unwrap_err(), TlError::ParseInt(_)));
+    assert!(matches!(
+        parse_colorfgbg("15").unwrap_err(),
+        TlError::WrongFormat(_)
+    ));
+    assert!(matches!(
+        parse_colorfgbg("15;FF").unwrap_err(),
+        TlError::ParseInt(_)
+    ));
 }

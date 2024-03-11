@@ -6,8 +6,7 @@ fn query(query: &str, timeout_ms: u16) -> Result<String, TlError> {
     if switch_to_raw {
         enable_raw_mode()?;
     }
-    let res = xterm_query::query(query, timeout_ms)
-        .map_err(|e| e.into());
+    let res = xterm_query::query(query, timeout_ms).map_err(|e| e.into());
     if switch_to_raw {
         disable_raw_mode()?;
     }
@@ -32,14 +31,11 @@ pub fn query_bg_color() -> Result<Rgb, TlError> {
     // We read only the most significant hex digits which are good enough
     // in all cases.
     match s.strip_prefix("\x1b]11;rgb:") {
-        Some(raw_color) if raw_color.len() >= 14 => {
-            Ok(Rgb::new(
-                u8::from_str_radix(&raw_color[0..2], 16)?,
-                u8::from_str_radix(&raw_color[5..7], 16)?,
-                u8::from_str_radix(&raw_color[10..12], 16)?,
-            ))
-        }
-        _ => Err(TlError::WrongFormat(s.to_string()))
+        Some(raw_color) if raw_color.len() >= 14 => Ok(Rgb::new(
+            u8::from_str_radix(&raw_color[0..2], 16)?,
+            u8::from_str_radix(&raw_color[5..7], 16)?,
+            u8::from_str_radix(&raw_color[10..12], 16)?,
+        )),
+        _ => Err(TlError::WrongFormat(s.to_string())),
     }
 }
-

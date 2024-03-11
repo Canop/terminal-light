@@ -75,16 +75,13 @@ Malus:
 
 */
 
-mod error;
 pub mod env;
+mod error;
 
 #[cfg(unix)]
 mod xterm;
 
-pub use {
-    coolor::*,
-    error::*,
-};
+pub use {coolor::*, error::*};
 
 /// Try to determine the background color of the terminal.
 ///
@@ -121,4 +118,3 @@ pub fn background_color() -> Result<Color, TlError> {
 pub fn luma() -> Result<f32, TlError> {
     background_color().map(|c| c.luma())
 }
-

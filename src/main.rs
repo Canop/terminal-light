@@ -6,4 +6,3 @@ fn main() -> Result<(), TlError> {
     println!("{}", luma()?);
     Ok(())
 }
-

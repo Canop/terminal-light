@@ -1,7 +1,6 @@
 /// terminal-light error type
 #[derive(thiserror::Error, Debug)]
 pub enum TlError {
-
     #[error("IO error: {0}")]
     IO(#[from] std::io::Error),
 
@@ -24,4 +23,3 @@ pub enum TlError {
     #[error("Unsupported platform")] // nothing works
     Unsupported,
 }
-
