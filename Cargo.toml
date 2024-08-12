@@ -1,6 +1,6 @@
 [package]
 name = "terminal-light"
-version = "1.4.0"
+version = "1.5.0"
 edition = "2021"
 authors = ["dystroy <denys.seguret@gmail.com>"]
 repository = "https://github.com/Canop/terminal-light"
@@ -11,15 +11,15 @@ categories = ["command-line-interface"]
 readme = "README.md"
 
 [dependencies]
-coolor = "0.9"
-crossterm = "0.27"
+coolor = "1.0"
+crossterm = "0.28"
 thiserror = "1.0"
 
 [target.'cfg(unix)'.dependencies]
 xterm-query = "0.4"
 
 [dev-dependencies]
-crossterm = "0.27"
+crossterm = "0.28"
 
 [patch.crates-io]
 # coolor = { path = "../coolor" }
