@@ -6,7 +6,8 @@ fn query(query: &str, timeout_ms: u16) -> Result<String, TlError> {
     if switch_to_raw {
         enable_raw_mode()?;
     }
-    let res = xterm_query::query(query, timeout_ms).map_err(|e| e.into());
+    let res = xterm_query::query_osc(query, timeout_ms)
+        .map_err(|e| e.into());
     if switch_to_raw {
         disable_raw_mode()?;
     }
@@ -22,7 +23,7 @@ pub fn query_bg_color() -> Result<Rgb, TlError> {
     // - https://stackoverflow.com/a/28334701/263525
     // - https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
     let s = query("\x1b]11;?\x07", 100)?;
-    // The string we receive is like `"\u{1b}]11;rgb:<red>/<green>/<blue>\u{1b}\\"`
+    // The string we receive is like `"]11;rgb:<red>/<green>/<blue>\\"`
     // where `<red>`, `<green>`, and `<blue>` are 4 hex digits.
     // Most terminals don't support such precision so they fill the 4 digits
     // by repeating their 2 digits precision.
@@ -30,7 +31,7 @@ pub fn query_bg_color() -> Result<Rgb, TlError> {
     // then we receive `"\u{1b}]11;rgb:3838/a4a4/c9c9\u{1b}\\"`.
     // We read only the most significant hex digits which are good enough
     // in all cases.
-    match s.strip_prefix("\x1b]11;rgb:") {
+    match s.strip_prefix("]11;rgb:") {
         Some(raw_color) if raw_color.len() >= 14 => Ok(Rgb::new(
             u8::from_str_radix(&raw_color[0..2], 16)?,
             u8::from_str_radix(&raw_color[5..7], 16)?,
