@@ -7,7 +7,7 @@ fn query(query: &str, timeout_ms: u16) -> Result<String, TlError> {
         enable_raw_mode()?;
     }
     let res = xterm_query::query_osc(query, timeout_ms)
-        .map_err(|e| e.into());
+        .map_err(std::convert::Into::into);
     if switch_to_raw {
         disable_raw_mode()?;
     }
@@ -37,6 +37,6 @@ pub fn query_bg_color() -> Result<Rgb, TlError> {
             u8::from_str_radix(&raw_color[5..7], 16)?,
             u8::from_str_radix(&raw_color[10..12], 16)?,
         )),
-        _ => Err(TlError::WrongFormat(s.to_string())),
+        _ => Err(TlError::WrongFormat(s.clone())),
     }
 }

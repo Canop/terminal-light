@@ -33,17 +33,19 @@ match terminal_light::luma() {
 
 # Strategies
 
+Here are the various strategies automatically used by terminal-light to determine the background:
+
 ## `$COLORFGBG` strategy
 
 This environment variable is set by some terminals, like konsole or the rxvt family.
 It can also be set by users.
 Its value is like `15;0` where the second number is the ANSI code for the background color.
 
-Bonus:
+Upside:
 
 * querying an env variable is a fast operation
 
-Malus:
+Downsides:
 
 * this env variable isn't always immediately updated when you change the color of the terminal
 * the value isn't precise: `0` is "dark" and `15` is "light" but the real RGB color is uncertain as the low ANSI codes are often modified by the user
@@ -54,13 +56,13 @@ Modern terminals implement this xterm extension: a query making it possible to k
 
 Terminal-light sends the query to `stdout`, waits for the answer on `stdin` with a timeout of 20ms, then analyses this answer.
 
-Bonus:
+Upsides:
 
-* this works well on all tested linux terminals
+* this works well on all tested unix terminals, eg Linux and MacOS
 * the value is precise (RGB)
 * the value is up to date when it's available
 
-Malus:
+Downsides:
 
 * waiting for stdin with a timeout isn't implemented on Windows in this crate (help welcome)
 * this isn't instant, a delay of 10 ms to get the answer isn't unusual
@@ -116,5 +118,5 @@ pub fn background_color() -> Result<Color, TlError> {
 /// "light" when it's over 0.9. If you need to choose a pivot between
 /// "rather dark" and "rather light" then 0.6 should do.
 pub fn luma() -> Result<f32, TlError> {
-    background_color().map(|c| c.luma())
+    background_color().map(Color::luma)
 }

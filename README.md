@@ -14,6 +14,12 @@
 
 # terminal-light
 
+![dark](doc/dark.png)
+
+![light](doc/light.png)
+
+<!-- cradoc start -->
+
 This crate answers the question *"Is the terminal dark or light?"*.
 
 It provides
@@ -45,16 +51,9 @@ match terminal_light::luma() {
 }
 ```
 
-See the included example:
-
-![dark](doc/dark.png)
-
-![light](doc/light.png)
-
-
 # Strategies
 
-Here are the various strategies automatically used by terminal-light to answer the big question:
+Here are the various strategies automatically used by terminal-light to determine the background:
 
 ## `$COLORFGBG` strategy
 
@@ -62,7 +61,7 @@ This environment variable is set by some terminals, like konsole or the rxvt fam
 It can also be set by users.
 Its value is like `15;0` where the second number is the ANSI code for the background color.
 
-Upsides:
+Upside:
 
 * querying an env variable is a fast operation
 
@@ -75,11 +74,11 @@ Downsides:
 
 Modern terminals implement this xterm extension: a query making it possible to know the background color as RGB.
 
-Terminal-light sends the query on `stdout`, waits for the answer on `stdin` with a timeout of 20ms, then parses this answer.
+Terminal-light sends the query to `stdout`, waits for the answer on `stdin` with a timeout of 20ms, then analyses this answer.
 
 Upsides:
 
-* this works well on all tested unix terminals, including on MacOs
+* this works well on all tested unix terminals, eg Linux and MacOS
 * the value is precise (RGB)
 * the value is up to date when it's available
 
@@ -95,3 +94,6 @@ Downsides:
 1. if we're on a unix-like platform, we try the escape sequence strategy
 2. if it failed or we're not on unix, we try the `$COLORFGBG` strategy
 3. without a solution, we return a `TlError::Unsupported` error
+<!-- cradoc end -->
+
+
